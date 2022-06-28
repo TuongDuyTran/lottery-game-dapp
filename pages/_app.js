@@ -1,8 +1,10 @@
 import '../styles/globals.css'
+import { useRouter } from 'next/router'
 
 function MyApp({ Component, pageProps }) {
+  const router = useRouter()
   
-  return <Component {...pageProps} />
+  return <Component key={router.asPath} {...pageProps} />
 }
 
 export default MyApp

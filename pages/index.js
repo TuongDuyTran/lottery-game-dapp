@@ -24,6 +24,30 @@ export default function Home() {
       age: 42,
       address: '10 Downing Street',
     },
+    {
+      key: '3',
+      name: 'Mike',
+      age: 32,
+      address: '10 Downing Street',
+    },
+    // {
+    //   key: '4',
+    //   name: 'John',
+    //   age: 42,
+    //   address: '10 Downing Street',
+    // },
+    // {
+    //   key: '5',
+    //   name: 'Mike',
+    //   age: 32,
+    //   address: '10 Downing Street',
+    // },
+    // {
+    //   key: '6',
+    //   name: 'John',
+    //   age: 42,
+    //   address: '10 Downing Street',
+    // },
   ];
 
   const columns = [

@@ -160,6 +160,23 @@
 
 .contentTable {
   position: absolute;
-  margin-top: 31%;
+  margin-top: 26%;
   width: 85%;
+}
+.messageAdmin {
+  justify-content: center;
+  display: flex;
+  align-items: center;
+}
+.cardAdmin {
+  position: relative;
+}
+.buttonAdmin {
+  position: absolute;
+  top: 27px;
+  left: 46px;
+  align-items: center;
+  display: flex;
+  margin-top: 15%;
+  animation: animPing 3s 1s linear infinite;
 }

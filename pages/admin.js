@@ -1,8 +1,8 @@
 
 import styles from "../styles/Home.module.css";
 import "antd/dist/antd.css";
-import { Button, PageHeader, Image, Table } from "antd";
-import { HomeOutlined, WalletOutlined } from "@ant-design/icons";
+import { Button, PageHeader, Image, Col, Row, Card } from "antd";
+import { HomeOutlined, GiftOutlined, SelectOutlined } from "@ant-design/icons";
 import { useRouter } from 'next/router'
 
 export default function Admin() {
@@ -19,13 +19,13 @@ export default function Admin() {
       address: '0XCD',
     },
   ];
-  
+
   const columns = [
     {
-        title: 'STT',
-        dataIndex: 'key',
-        key: 'key',
-      },,
+      title: 'STT',
+      dataIndex: 'key',
+      key: 'key',
+    }, ,
     {
       title: 'Name',
       dataIndex: 'name',
@@ -44,7 +44,7 @@ export default function Admin() {
       <PageHeader
         title="LOTTERY GAME"
         className="site-page-header"
-        subTitle="Team Chicken"
+        subTitle="Trang quản lý"
         extra={[
           <Button key="2" type="danger" shape="round" onClick={() => router.push('/')}>
             <HomeOutlined />
@@ -55,20 +55,39 @@ export default function Admin() {
           src: "./images/lottery.png",
         }}
       ></PageHeader>
-        <Table dataSource={dataSource} columns={columns} />;
 
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{" "}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
+      <Row>
+        <Col span={6} offset={6}>
+        <Card title="PICK WINNER" bordered={false} style={{ width: 300 }}>
+          <div className={styles.cardAdmin}>
+          <Image
+            src="/images/hinh2.jpg"
+            alt="Vercel Logo"
+            width={'100%'}
+            height={'100%'}
+            preview={false}
+          />
+        <Button className={styles.buttonAdmin} type="primary" shape="round" icon={<SelectOutlined />} size={'large'} >PICK WINNER</Button>
+          </div>
+          <div className={styles.messageAdmin}>Long dz</div>
+    </Card>
+        </Col>
+        <Col span={6} offset={6}>
+        <Card title="PAY WINNER" bordered={false} style={{ width: 300 }}>
+          <div className={styles.cardAdmin}>
+          <Image
+            src="/images/hinh2.jpg"
+            alt="Vercel Logo"
+            width={'100%'}
+            height={'100%'}
+            preview={false}
+          />
+        <Button className={styles.buttonAdmin} type="primary" shape="round" icon={<GiftOutlined />} size={'large'} >PAY WINNER</Button>
+          </div>
+        <div className={styles.messageAdmin}>Long dz</div>
+    </Card>
+        </Col>
+      </Row>
     </div>
   );
 }

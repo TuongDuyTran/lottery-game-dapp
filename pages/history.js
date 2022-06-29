@@ -1,52 +1,57 @@
-
 import styles from "../styles/Home.module.css";
 import "antd/dist/antd.css";
-import { Button, PageHeader, Image, Table } from "antd";
+import { Button, PageHeader, Image, Table, Row, Col } from "antd";
 import { HomeOutlined, WalletOutlined } from "@ant-design/icons";
-import { useRouter } from 'next/router'
+import { useRouter } from "next/router";
+import { Footer } from "antd/lib/layout/layout";
 
 export default function History() {
   const router = useRouter();
   const dataSource = [
     {
-      key: '1',
-      name: 'User2',
-      address: '0XAb',
+      key: "1",
+      name: "User2",
+      address: "0XAb",
     },
     {
-      key: '2',
-      name: 'User1',
-      address: '0XCD',
+      key: "2",
+      name: "User1",
+      address: "0XCD",
     },
   ];
-  
+
   const columns = [
     {
-        title: 'STT',
-        dataIndex: 'key',
-        key: 'key',
-      },,
+      title: "STT",
+      dataIndex: "key",
+      key: "key",
+    },
+    ,
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
+      title: "Address",
+      dataIndex: "address",
+      key: "address",
     },
   ];
 
-
   return (
-    <div>
+    <div className={styles.mainContainer}>
       <PageHeader
         title="LOTTERY GAME"
         className="site-page-header"
-        subTitle="Team Chicken"
+        subTitle="Lịch sử người chiến thắng"
         extra={[
-          <Button key="2" type="danger" shape="round" onClick={() => router.push('/')}>
+          <Button
+            key="2"
+            type="danger"
+            shape="round"
+            onClick={() => router.push("/")}
+          >
             <HomeOutlined />
             Trang chủ
           </Button>,
@@ -59,20 +64,17 @@ export default function History() {
           src: "./images/lottery.png",
         }}
       ></PageHeader>
-        <Table dataSource={dataSource} columns={columns} />;
+      <div className={styles.headerTitle}>Lịch sử người chiến thắng</div>
+      <Table dataSource={dataSource} columns={columns} />;
+      <Footer className={styles.footerPage}>
 
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{" "}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
+        <div className={styles.copyRight}>
+          © 2022 Copyright:
+          <a className="text-white" href="#">
+            Chicken.com
+          </a>
+        </div>
+      </Footer>
     </div>
   );
 }

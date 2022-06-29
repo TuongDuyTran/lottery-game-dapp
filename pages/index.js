@@ -30,24 +30,24 @@ export default function Home() {
       age: 32,
       address: '10 Downing Street',
     },
-    // {
-    //   key: '4',
-    //   name: 'John',
-    //   age: 42,
-    //   address: '10 Downing Street',
-    // },
-    // {
-    //   key: '5',
-    //   name: 'Mike',
-    //   age: 32,
-    //   address: '10 Downing Street',
-    // },
-    // {
-    //   key: '6',
-    //   name: 'John',
-    //   age: 42,
-    //   address: '10 Downing Street',
-    // },
+    {
+      key: '4',
+      name: 'John',
+      age: 42,
+      address: '10 Downing Street',
+    },
+    {
+      key: '5',
+      name: 'Mike',
+      age: 32,
+      address: '10 Downing Street',
+    },
+    {
+      key: '6',
+      name: 'John',
+      age: 42,
+      address: '10 Downing Street',
+    },
   ];
 
   const columns = [
@@ -138,7 +138,9 @@ export default function Home() {
       
 
         <div className={styles.contentTable}>
-          <Table dataSource={dataSource} columns={columns} />
+          <div className={styles.tableScroll}>
+            <Table dataSource={dataSource} columns={columns} />
+          </div>
         </div>
       </div>
 

@@ -1,17 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "../styles/Home.module.css";
 import "antd/dist/antd.css";
 import Web3 from "web3";
 import { Button, PageHeader, Table, Image } from "antd";
 import { HistoryOutlined, WalletOutlined, PlayCircleOutlined, UserOutlined } from "@ant-design/icons";
 import { useRouter } from 'next/router'
+import initializeLotteryContract from "../blockchain/lottery";
 
 export default function Home() {
-  const [web3, setWeb3] = useState();
-  const [address, setAddress] = useState();
   const router = useRouter();
 
-  const dataSource = [
+  const [web3, setWeb3] = useState();
+  const [address, setAddress] = useState();
+  const [lotteryContract, set_LotteryContract] = useState();
+  const [lotteryPot, set_LotteryPot] = useState();
+  const [players, set_Players] = useState([]);
+  const [dataSource, set_dataSource] = useState([
     {
       key: '1',
       name: 'Mike',
@@ -48,7 +52,7 @@ export default function Home() {
       age: 42,
       address: '10 Downing Street',
     },
-  ];
+  ]);
 
   const columns = [
     {
@@ -79,6 +83,9 @@ export default function Home() {
         setWeb3(web3);
         const accounts = await web3.eth.getAccounts();
         setAddress(accounts[0]);
+
+        const lc = initializeLotteryContract(web3);
+        set_LotteryContract(lc);
       } catch (err) {
         console.log(
           "🚀 ~ file: index.js ~ line 20 ~ handleConnectWal ~ err",
@@ -92,6 +99,47 @@ export default function Home() {
       );
     }
   };
+
+  useEffect(() => {
+    if (lotteryContract) {
+      getPot();
+      getPlayers();
+      set_dataSource(players.map((player, index) => {
+        return {
+          key: index + 1,
+          name: `https://etherscan.io/address/${player}`,
+          age: 20,
+          address: player
+        }
+      }));
+    }
+      
+  }, [lotteryContract, lotteryPot, players])
+
+  const getPot = async () => {
+    const pot = await lotteryContract.methods.getBalance().call();
+    set_LotteryPot(pot);
+  }
+
+  const getPlayers = async () => {
+    const players = await lotteryContract.methods.getPlayers().call();
+    set_Players(players);
+    
+  }
+
+  const handleEnterLottery = async () => {
+    try {
+      await lotteryContract.methods.enter().send({
+        from: address,
+        value: '10000000000000000',
+        gas: 3000000,
+        gasPrice: null
+      })
+    } catch (err) {
+      console.log("🚀 ~ file: index.js ~ line 140 ~ startLottery ~ err", err)
+    }
+    
+  }
 
   const onChange = (currentSlide) => {
     console.log(currentSlide);
@@ -112,7 +160,7 @@ export default function Home() {
             <HistoryOutlined />
             Lịch sử
           </Button>,
-          <Button key="1" type="primary" shape="round">
+          <Button key="1" type="primary" shape="round" onClick={handleConnectWallet}>
             <WalletOutlined />
             Kết nối Wallet
           </Button>,
@@ -122,7 +170,11 @@ export default function Home() {
         }}
       ></PageHeader>
 
+      <h2 style={{ textAlign: 'center' }}>Pot: {lotteryPot}</h2>
+
       <div className={styles.contentLottery}>
+        
+
         <div className={styles.imageLogo}>
           <Image
             src="/images/hinh2.jpg"
@@ -133,9 +185,12 @@ export default function Home() {
           />
         </div>
 
-        <Button className={styles.buttonPlayNow} type="primary" shape="round" icon={<PlayCircleOutlined />} size={'large'} >PLAY NOW</Button>
-
-      
+        <Button className={styles.buttonPlayNow} 
+                type="primary" 
+                shape="round" 
+                icon={<PlayCircleOutlined />} 
+                size={'large'} 
+                onClick={handleEnterLottery}>PLAY NOW</Button>
 
         <div className={styles.contentTable}>
           <div className={styles.tableScroll}>
@@ -144,7 +199,7 @@ export default function Home() {
         </div>
       </div>
 
-
+      
     </div>
   );
 }

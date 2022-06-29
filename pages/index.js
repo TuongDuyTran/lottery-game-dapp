@@ -2,22 +2,47 @@ import { useState } from "react";
 import styles from "../styles/Home.module.css";
 import "antd/dist/antd.css";
 import Web3 from "web3";
-import { Button, PageHeader, Carousel, Image } from "antd";
-import { HistoryOutlined, WalletOutlined } from "@ant-design/icons";
+import { Button, PageHeader, Table, Image } from "antd";
+import { HistoryOutlined, WalletOutlined, PlayCircleOutlined, UserOutlined } from "@ant-design/icons";
 import { useRouter } from 'next/router'
-
-const contentStyle = {
-  height: "240px",
-  color: "#fff",
-  lineHeight: "240px",
-  textAlign: "center",
-  background: "#364d79",
-};
 
 export default function Home() {
   const [web3, setWeb3] = useState();
   const [address, setAddress] = useState();
-  const router = useRouter()
+  const router = useRouter();
+
+  const dataSource = [
+    {
+      key: '1',
+      name: 'Mike',
+      age: 32,
+      address: '10 Downing Street',
+    },
+    {
+      key: '2',
+      name: 'John',
+      age: 42,
+      address: '10 Downing Street',
+    },
+  ];
+
+  const columns = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'Age',
+      dataIndex: 'age',
+      key: 'age',
+    },
+    {
+      title: 'Address',
+      dataIndex: 'address',
+      key: 'address',
+    },
+  ];
 
   const handleConnectWallet = async () => {
     if (
@@ -49,12 +74,16 @@ export default function Home() {
   };
 
   return (
-    <div>
+    <div className={styles.mainContainer}>
       <PageHeader
         title="LOTTERY GAME"
         className="site-page-header"
         subTitle="Team Chicken"
         extra={[
+          <Button key="3" type="primary" shape="round" onClick={() => router.push('/admin')}>
+            <UserOutlined />
+            Quản lý
+          </Button>,
           <Button key="2" type="danger" shape="round" onClick={() => router.push('/history')}>
             <HistoryOutlined />
             Lịch sử
@@ -69,48 +98,27 @@ export default function Home() {
         }}
       ></PageHeader>
 
-      <Carousel afterChange={onChange}>
-        <div>
-          <Image
-            src="/images/hinh1.jpg"
-            alt="Vercel Logo"
-            width={'100%'}
-            height={'360px'}
-            preview={false}
-          />
-        </div>
-        <div>
+      <div className={styles.contentLottery}>
+        <div className={styles.imageLogo}>
           <Image
             src="/images/hinh2.jpg"
             alt="Vercel Logo"
             width={'100%'}
-            height={'360px'}
+            height={'100%'}
             preview={false}
           />
         </div>
-        <div>
-          <Image
-            src="/images/hinh3.jpg"
-            alt="Vercel Logo"
-            width={'100%'}
-            height={'360px'}
-            preview={false}
-          />
-        </div>
-      </Carousel>
 
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{" "}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
+        <Button className={styles.buttonPlayNow} type="primary" shape="round" icon={<PlayCircleOutlined />} size={'large'} >PLAY NOW</Button>
+
+      
+
+        <div className={styles.contentTable}>
+          <Table dataSource={dataSource} columns={columns} />
+        </div>
+      </div>
+
+
     </div>
   );
 }

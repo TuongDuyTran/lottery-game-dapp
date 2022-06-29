@@ -114,3 +114,52 @@
     flex-direction: column;
   }
 }
+
+.contentLottery {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.buttonPlayNow {
+  position: absolute;
+  align-items: center;
+  display: flex;
+  margin-top: 15%;
+  
+  animation: animPing 3s 1s linear infinite; 
+}
+
+
+
+@keyframes animPing {
+  0% {
+    background: rgb(16, 95, 241);
+    border: 0px solid rgb(247, 247, 247);
+ }
+  80% {
+    background: rgb(16, 95, 241);
+    border: 0px solid rgb(247, 247, 247);
+ }
+}
+
+.imageLogo {
+  position: absolute !important;
+  height: 100%;
+  width: 100%;
+  overflow-y: hidden;
+}
+
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.contentTable {
+  position: absolute;
+  margin-top: 31%;
+  width: 85%;
+}

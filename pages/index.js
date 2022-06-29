@@ -131,7 +131,7 @@ export default function Home() {
     try {
       await lotteryContract.methods.enter().send({
         from: address,
-        value: '10000000000000000',
+        value: '2000000000000000',
         gas: 3000000,
         gasPrice: null
       })

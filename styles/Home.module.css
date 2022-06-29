@@ -173,10 +173,6 @@
 }
 .buttonAdmin {
   position: absolute;
-  top: 27px;
-  left: 46px;
-  align-items: center;
-  display: flex;
-  margin-top: 15%;
-  animation: animPing 3s 1s linear infinite;
+  top: 65px;
+  left: 95px;
 }

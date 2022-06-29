@@ -56,36 +56,40 @@ export default function Admin() {
         }}
       ></PageHeader>
 
-      <Row>
+      <Row gutter={12}>
         <Col span={6} offset={6}>
-        <Card title="PICK WINNER" bordered={false} style={{ width: 300 }}>
-          <div className={styles.cardAdmin}>
-          <Image
-            src="/images/hinh2.jpg"
-            alt="Vercel Logo"
-            width={'100%'}
-            height={'100%'}
-            preview={false}
-          />
-        <Button className={styles.buttonAdmin} type="primary" shape="round" icon={<SelectOutlined />} size={'large'} >PICK WINNER</Button>
-          </div>
-          <div className={styles.messageAdmin}>Long dz</div>
-    </Card>
+          <Card title="PICK WINNER" bordered={true} style={{ width: 400 }}>
+            <div className={styles.cardAdmin}>
+              <Image
+                src="/images/hinh2.jpg"
+                alt="Vercel Logo"
+                width={'100%'}
+                height={'100%'}
+                preview={false}
+              />
+              <div className={styles.buttonAdmin}>
+              <Button className={styles.buttonPlayNow} type="primary" shape="round" icon={<SelectOutlined />} size={'large'} >PICK WINNER</Button>
+              </div>
+            </div>
+            <div className={styles.messageAdmin}>Long dz</div>
+          </Card>
         </Col>
-        <Col span={6} offset={6}>
-        <Card title="PAY WINNER" bordered={false} style={{ width: 300 }}>
-          <div className={styles.cardAdmin}>
-          <Image
-            src="/images/hinh2.jpg"
-            alt="Vercel Logo"
-            width={'100%'}
-            height={'100%'}
-            preview={false}
-          />
-        <Button className={styles.buttonAdmin} type="primary" shape="round" icon={<GiftOutlined />} size={'large'} >PAY WINNER</Button>
-          </div>
-        <div className={styles.messageAdmin}>Long dz</div>
-    </Card>
+        <Col span={6}>
+          <Card title="PAY WINNER" bordered={true} style={{ width: 400 }}>
+            <div className={styles.cardAdmin}>
+              <Image
+                src="/images/hinh2.jpg"
+                alt="Vercel Logo"
+                width={'100%'}
+                height={'100%'}
+                preview={false}
+              />
+              <div className={styles.buttonAdmin}>
+              <Button className={styles.buttonPlayNow} type="primary" shape="round" icon={<GiftOutlined />} size={'large'} >PAY WINNER</Button>
+              </div>
+            </div>
+            <div className={styles.messageAdmin}>Long dz</div>
+          </Card>
         </Col>
       </Row>
     </div>

@@ -69,7 +69,7 @@ export default function History() {
   const getHistory = async (id) => {
     for (let i = parseInt(id); i > 0 ; i--) {
       const winner = await lotteryContract.methods.lotteryHistory(i).call();
-      set_LotteryHistory([...lotteryHistory, {key: id-i+1, name: `https://etherscan.io/address/${winner}`, address: winner}])
+      set_LotteryHistory(lotteryHistory => [...lotteryHistory, {key: parseInt(id) - i + 1, name: `https://etherscan.io/address/${winner}`, address: winner}])
     }
   }
 

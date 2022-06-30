@@ -17,15 +17,15 @@ export default function Admin() {
   const [successMsg, set_successMsg] = useState();
   const [lotteryId, set_LotteryId] = useState();
   const [lotteryHistory, set_LotteryHistory] = useState([]);
-  const [winneraddress, setWinnerAddress] = useState('');
+  const [winnerAddress, setWinnerAddress] = useState('');
 
   useEffect(() => {
     if (data.contract) {
-      if(!lotteryContract) {
+      if(!lotteryContract || !address) {
         set_LotteryContract(data.contract);
         setAddress(data.address);
       }
-      if(lotteryContract){
+      if(lotteryContract && address){
         getLotteryId();
         getHistory(lotteryId);
       }
@@ -34,16 +34,38 @@ export default function Admin() {
       handleError();
     }
       
-  },[lotteryContract, lotteryId, winneraddress, address]);
+  },[lotteryContract, lotteryId, winnerAddress, address, lotteryHistory]);
 
   const handlePickWinner = async() => {
     try {
-      await lotteryContract.methods.payWinner().send({
-        from: address,
-        gas: 300000,
-        gasPrice: null
-      });
-      setWinnerAddress(lotteryHistory[lotteryId - 1].address);
+      if(address){
+        await lotteryContract.methods.pickWinner().send({
+          from: address,
+          gas: 300000,
+          gasPrice: null
+        });
+        await lotteryContract.methods.lotteryHistory(lotteryId).call();
+      }
+    } catch (err) {
+      message.error(err.message);
+      console.log("🚀 ~ file: index.js ~ line 140 ~ startLottery ~ err", err)
+    }
+  }
+
+  const handlePayWinner = async() => {
+    try {
+      if(address){
+        await lotteryContract.methods.payWinner().send({
+          from: address,
+          gas: 300000,
+          gasPrice: null
+        });
+        const winnerPay =  await lotteryContract.methods.lotteryHistory(lotteryId).call();
+        console.log(winnerPay);
+        setWinnerAddress(winnerPay);
+        message.success(winnerPay);
+        console.log('address winner', winnerAddress);
+      }
     } catch (err) {
       message.error(err.message);
       console.log("🚀 ~ file: index.js ~ line 140 ~ startLottery ~ err", err)
@@ -96,7 +118,6 @@ export default function Admin() {
               <Button className={styles.buttonPlayNow1} type="danger" shape="round" icon={<SelectOutlined />} size={'large'} onClick={handlePickWinner} >PICK WINNER</Button>
               </div>
             </div>
-            <div className={styles.messageAdmin}>{winneraddress}</div>
           </Card>
         </Col>
         <Col span={6} offset={1}>
@@ -110,10 +131,10 @@ export default function Admin() {
                 preview={false}
               />
               <div className={styles.buttonAdmin}>
-              <Button className={styles.buttonPlayNow} type="primary" shape="round" icon={<GiftOutlined />} size={'large'} >PAY WINNER</Button>
+              <Button className={styles.buttonPlayNow} type="primary" shape="round" icon={<GiftOutlined />} size={'large'} onClick={handlePayWinner}>PAY WINNER</Button>
               </div>
             </div>
-            <div className={styles.messageAdmin}>Long dz</div>
+            <div className={styles.messageAdmin}>{winnerAddress}</div>
           </Card>
         </Col>
       </Row>

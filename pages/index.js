@@ -60,6 +60,10 @@ export default function Home() {
         const lc = initializeLotteryContract(web3);
         set_LotteryContract(lc);
         set_Data({contract: lc, address: accounts[0]});
+        window.ethereum.on('accountsChanged', async() => {
+          const accounts = await web3.eth.getAccounts();
+          setAddress(accounts[0]);
+        });
       } catch (err) {
         set_error(err.message);
         console.log(
@@ -80,6 +84,16 @@ export default function Home() {
       if(!lotteryContract) {
         set_LotteryContract(data.contract);
       }
+      updateState();
+    }
+    if(error) {
+      handleError();
+    }
+      
+  }, [lotteryContract, lotteryPot, players, error]);
+
+  const updateState = ()=> {
+    if(lotteryContract){
       getPot();
       getPlayers();
       set_dataSource(players.map((player, index) => {
@@ -91,16 +105,7 @@ export default function Home() {
         }
       }));
     }
-    if(error) {
-      handleError();
-    }
-      
-  }, [lotteryContract, lotteryPot, players, error])
-
-  window.ethereum.on('accountsChanged', async() => {
-    const accounts = await web3.eth.getAccounts();
-    setAddress(accounts[0]);
-  })
+  }
 
   const getPot = async () => {
     if(lotteryContract){
@@ -124,7 +129,8 @@ export default function Home() {
         value: '2000000000000000',
         gas: 3000000,
         gasPrice: null
-      })
+      });
+      updateState();
     } catch (err) {
       message.error(err.message);
       console.log("🚀 ~ file: index.js ~ line 140 ~ startLottery ~ err", err)

@@ -1,58 +1,24 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import styles from "../styles/Home.module.css";
 import "antd/dist/antd.css";
 import Web3 from "web3";
-import { Button, PageHeader, Table, Image } from "antd";
+import { Button, PageHeader, Table, Image, message } from "antd";
 import { HistoryOutlined, WalletOutlined, PlayCircleOutlined, UserOutlined } from "@ant-design/icons";
 import { useRouter } from 'next/router'
 import initializeLotteryContract from "../blockchain/lottery";
+import DataContext from "../context/dataContext";
 
 export default function Home() {
   const router = useRouter();
-
+  const [data, set_Data] = useContext(DataContext);
   const [web3, setWeb3] = useState();
   const [address, setAddress] = useState();
   const [lotteryContract, set_LotteryContract] = useState();
   const [lotteryPot, set_LotteryPot] = useState();
   const [players, set_Players] = useState([]);
-  const [dataSource, set_dataSource] = useState([
-    {
-      key: '1',
-      name: 'Mike',
-      age: 32,
-      address: '10 Downing Street',
-    },
-    {
-      key: '2',
-      name: 'John',
-      age: 42,
-      address: '10 Downing Street',
-    },
-    {
-      key: '3',
-      name: 'Mike',
-      age: 32,
-      address: '10 Downing Street',
-    },
-    {
-      key: '4',
-      name: 'John',
-      age: 42,
-      address: '10 Downing Street',
-    },
-    {
-      key: '5',
-      name: 'Mike',
-      age: 32,
-      address: '10 Downing Street',
-    },
-    {
-      key: '6',
-      name: 'John',
-      age: 42,
-      address: '10 Downing Street',
-    },
-  ]);
+  const [dataSource, set_dataSource] = useState([]);
+  const [error, set_error] = useState();
+  const [successMsg, set_successMsg] = useState();
 
   const columns = [
     {
@@ -72,6 +38,13 @@ export default function Home() {
     },
   ];
 
+  const handleError = () => {
+    if(error){
+      message.error(error);
+      set_error('');
+    }
+  };
+
   const handleConnectWallet = async () => {
     if (
       typeof window !== "undefined" &&
@@ -86,7 +59,9 @@ export default function Home() {
 
         const lc = initializeLotteryContract(web3);
         set_LotteryContract(lc);
+        set_Data({contract: lc});
       } catch (err) {
+        set_error(err.message);
         console.log(
           "🚀 ~ file: index.js ~ line 20 ~ handleConnectWal ~ err",
           err.message
@@ -101,7 +76,10 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if (lotteryContract) {
+    if (lotteryContract || data.contract) {
+      if(!lotteryContract) {
+        set_LotteryContract(data.contract);
+      }
       getPot();
       getPlayers();
       set_dataSource(players.map((player, index) => {
@@ -113,17 +91,24 @@ export default function Home() {
         }
       }));
     }
+    if(error) {
+      handleError();
+    }
       
-  }, [lotteryContract, lotteryPot, players])
+  }, [lotteryContract, lotteryPot, players, error])
 
   const getPot = async () => {
-    const pot = await lotteryContract.methods.getBalance().call();
-    set_LotteryPot(pot);
+    if(lotteryContract){
+      const pot = await lotteryContract.methods.getBalance().call();
+      set_LotteryPot(pot);
+    }
   }
 
   const getPlayers = async () => {
-    const players = await lotteryContract.methods.getPlayers().call();
-    set_Players(players);
+    if(lotteryContract){
+      const players = await lotteryContract.methods.getPlayers().call();
+      set_Players(players);
+    }
     
   }
 
@@ -136,14 +121,11 @@ export default function Home() {
         gasPrice: null
       })
     } catch (err) {
+      message.error(err.message);
       console.log("🚀 ~ file: index.js ~ line 140 ~ startLottery ~ err", err)
     }
     
   }
-
-  const onChange = (currentSlide) => {
-    console.log(currentSlide);
-  };
 
   return (
     <div className={styles.mainContainer}>

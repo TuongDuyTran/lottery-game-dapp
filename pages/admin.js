@@ -1,44 +1,36 @@
 
 import styles from "../styles/Home.module.css";
 import "antd/dist/antd.css";
-import { Button, PageHeader, Image, Col, Row, Card } from "antd";
+import { Button, PageHeader, Image, Col, Row, Card, message } from "antd";
 import { HomeOutlined, GiftOutlined, SelectOutlined } from "@ant-design/icons";
 import { useRouter } from 'next/router'
 import { Footer } from "antd/lib/layout/layout";
+import DataContext from "../context/dataContext";
+import { useState, useContext } from "react";
 
 export default function Admin() {
   const router = useRouter();
-  const dataSource = [
-    {
-      key: '1',
-      name: 'User2',
-      address: '0XAb',
-    },
-    {
-      key: '2',
-      name: 'User1',
-      address: '0XCD',
-    },
-  ];
+  const [data, set_Data] = useContext(DataContext);
+  const [web3, setWeb3] = useState();
+  const [lotteryContract, set_LotteryContract] = useState();
+  const [address, setAddress] = useState();
+  const [error, set_error] = useState();
+  const [successMsg, set_successMsg] = useState();
 
-  const columns = [
-    {
-      title: 'STT',
-      dataIndex: 'key',
-      key: 'key',
-    }, ,
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
-    },
-  ];
-
+  console.log('dta admin', data);
+  set_LotteryContract(data.contract);
+  const handlePickWinner = async() => {
+    try {
+      await lotteryContract.methods.payWinner().send({
+        from: address,
+        gas: 300000,
+        gasPrice: null
+      })
+    } catch (err) {
+      message.error(err.message);
+      console.log("🚀 ~ file: index.js ~ line 140 ~ startLottery ~ err", err)
+    }
+  }
 
   return (
     <div className={styles.mainContainer}>
@@ -71,7 +63,7 @@ export default function Admin() {
                 preview={false}
               />
               <div className={styles.buttonAdmin}>
-              <Button className={styles.buttonPlayNow1} type="danger" shape="round" icon={<SelectOutlined />} size={'large'} >PICK WINNER</Button>
+              <Button className={styles.buttonPlayNow1} type="danger" shape="round" icon={<SelectOutlined />} size={'large'} onClick={handlePickWinner} >PICK WINNER</Button>
               </div>
             </div>
             <div className={styles.messageAdmin}>Long dz</div>

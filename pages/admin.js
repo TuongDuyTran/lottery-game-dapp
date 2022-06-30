@@ -6,19 +6,31 @@ import { HomeOutlined, GiftOutlined, SelectOutlined } from "@ant-design/icons";
 import { useRouter } from 'next/router'
 import { Footer } from "antd/lib/layout/layout";
 import DataContext from "../context/dataContext";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 
 export default function Admin() {
   const router = useRouter();
   const [data, set_Data] = useContext(DataContext);
-  const [web3, setWeb3] = useState();
   const [lotteryContract, set_LotteryContract] = useState();
   const [address, setAddress] = useState();
   const [error, set_error] = useState();
   const [successMsg, set_successMsg] = useState();
 
-  console.log('dta admin', data);
-  set_LotteryContract(data.contract);
+  useEffect(() => {
+    if (data.contract) {
+      if(!lotteryContract) {
+        set_LotteryContract(data.contract);
+      }
+      if(lotteryContract){
+        console.log(lotteryContract);
+      }
+    }
+    if(error) {
+      handleError();
+    }
+      
+  },[lotteryContract]);
+  
   const handlePickWinner = async() => {
     try {
       await lotteryContract.methods.payWinner().send({

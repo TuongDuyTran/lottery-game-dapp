@@ -59,7 +59,7 @@ export default function Home() {
 
         const lc = initializeLotteryContract(web3);
         set_LotteryContract(lc);
-        set_Data({contract: lc});
+        set_Data({contract: lc, address: accounts[0]});
       } catch (err) {
         set_error(err.message);
         console.log(
@@ -96,6 +96,11 @@ export default function Home() {
     }
       
   }, [lotteryContract, lotteryPot, players, error])
+
+  window.ethereum.on('accountsChanged', () => {
+    const accounts = await web3.eth.getAccounts();
+    setAddress(accounts[0]);
+  })
 
   const getPot = async () => {
     if(lotteryContract){

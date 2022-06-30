@@ -50,7 +50,7 @@ export default function History() {
 
         const lc = initializeLotteryContract(web3);
         set_LotteryContract(lc);
-        set_Data({contract: lc});
+        set_Data({contract: lc, address: accounts[0]});
       } catch (err) {
         set_error(err.message);
         console.log(

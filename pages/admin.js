@@ -15,33 +15,51 @@ export default function Admin() {
   const [address, setAddress] = useState();
   const [error, set_error] = useState();
   const [successMsg, set_successMsg] = useState();
+  const [lotteryId, set_LotteryId] = useState();
+  const [lotteryHistory, set_LotteryHistory] = useState([]);
+  const [winneraddress, setWinnerAddress] = useState('');
 
   useEffect(() => {
     if (data.contract) {
       if(!lotteryContract) {
         set_LotteryContract(data.contract);
+        setAddress(data.address);
       }
       if(lotteryContract){
-        console.log(lotteryContract);
+        getLotteryId();
+        getHistory(lotteryId);
       }
     }
     if(error) {
       handleError();
     }
       
-  },[lotteryContract]);
-  
+  },[lotteryContract, lotteryId, winneraddress, address]);
+
   const handlePickWinner = async() => {
     try {
       await lotteryContract.methods.payWinner().send({
         from: address,
         gas: 300000,
         gasPrice: null
-      })
+      });
+      setWinnerAddress(lotteryHistory[lotteryId - 1].address);
     } catch (err) {
       message.error(err.message);
       console.log("🚀 ~ file: index.js ~ line 140 ~ startLottery ~ err", err)
     }
+  }
+
+  const getHistory = async (id) => {
+    for (let i = parseInt(id); i > 0 ; i--) {
+      const winner = await lotteryContract.methods.lotteryHistory(i).call();
+      set_LotteryHistory([...lotteryHistory, {key: id-i+1, name: `https://etherscan.io/address/${winner}`, address: winner}])
+    }
+  }
+
+  const getLotteryId = async() => {
+    const lotteryId = await lotteryContract.methods.lotteryId().call();
+    set_LotteryId(lotteryId);
   }
 
   return (
@@ -78,7 +96,7 @@ export default function Admin() {
               <Button className={styles.buttonPlayNow1} type="danger" shape="round" icon={<SelectOutlined />} size={'large'} onClick={handlePickWinner} >PICK WINNER</Button>
               </div>
             </div>
-            <div className={styles.messageAdmin}>Long dz</div>
+            <div className={styles.messageAdmin}>{winneraddress}</div>
           </Card>
         </Col>
         <Col span={6} offset={1}>

@@ -97,7 +97,7 @@ export default function Home() {
       
   }, [lotteryContract, lotteryPot, players, error])
 
-  window.ethereum.on('accountsChanged', () => {
+  window.ethereum.on('accountsChanged', async() => {
     const accounts = await web3.eth.getAccounts();
     setAddress(accounts[0]);
   })

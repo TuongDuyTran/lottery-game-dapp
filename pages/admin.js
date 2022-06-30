@@ -101,7 +101,7 @@ export default function Admin() {
         }}
       ></PageHeader>
 
-    <div className={styles.headerTitle}>Lịch sử người chiến thắng</div>
+    <div className={styles.headerTitle}>Chọn người chiến thắng (chờ pick 5p rồi click pay)</div>
 
       <Row gutter={12}>
         <Col span={6} offset={6}>

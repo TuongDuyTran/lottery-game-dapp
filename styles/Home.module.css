@@ -163,10 +163,22 @@
 }
 
 .contentTable {
+  display: flex;
+  justify-content: center;
   position: absolute;
-  margin-top: 12%;
-  width: 85%;
+  top: 25%;
+  width: 80%;
 }
+
+.flexOne {
+  flex: 1
+}
+
+.boxPot {
+  background: rgb(221, 25, 25, 0.5);
+  flex: 1;
+}
+
 .messageAdmin {
   justify-content: center;
   display: flex;

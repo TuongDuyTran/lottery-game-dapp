@@ -1,15 +1,13 @@
 import styles from "../styles/Home.module.css";
 import "antd/dist/antd.css";
-import { Button, PageHeader, Image, Col, Row, Card, message } from "antd";
-import { HomeOutlined, GiftOutlined, SelectOutlined } from "@ant-design/icons";
-import { useRouter } from "next/router";
+import { Button, Image, Col, Row, Card, message } from "antd";
+import { GiftOutlined, SelectOutlined } from "@ant-design/icons";
 import { Footer } from "antd/lib/layout/layout";
 import DataContext from "../context/dataContext";
 import { useState, useContext, useEffect } from "react";
 import LayoutHeader from "../components/header";
 
 export default function Admin() {
-  const router = useRouter();
   const [data, set_Data] = useContext(DataContext);
   const [lotteryContract, set_LotteryContract] = useState();
   const [address, setAddress] = useState();

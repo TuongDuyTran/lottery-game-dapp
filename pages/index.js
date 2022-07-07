@@ -28,16 +28,6 @@ export default function Home() {
 
   const columns = [
     {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "Age",
-      dataIndex: "age",
-      key: "age",
-    },
-    {
       title: "Address",
       dataIndex: "address",
       key: "address",
@@ -105,8 +95,6 @@ export default function Home() {
         players.map((player, index) => {
           return {
             key: index + 1,
-            name: `https://etherscan.io/address/${player}`,
-            age: 20,
             address: player,
           };
         })
@@ -161,12 +149,12 @@ export default function Home() {
           PLAY NOW
         </Button> */}
 
-        <button className={styles.buttonPlayNow} onClick={handleEnterLottery}>PLAY NOW</button>
-
+        <button className={styles.buttonPlayNow} onClick={handleEnterLottery}>
+          PLAY NOW
+        </button>
         <div className={styles.contentTable}>
-          <div className={styles.tableScroll}>
-            <Table dataSource={dataSource} columns={columns} />
-          </div>
+          <Table dataSource={dataSource} columns={columns} className={styles.flexOne} />
+          <div className={styles.boxPot}></div>
         </div>
       </div>
     </div>

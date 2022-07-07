@@ -78,6 +78,9 @@ const LayoutHeader = ({ data, handleConnectWallet }) => {
     avatar={{
       src: "./images/lottery.png",
     }}
+    style={{
+        backgroundColor: 'rgba(255 255 255 / 72%)',
+    }}
   ></PageHeader>
     
 }

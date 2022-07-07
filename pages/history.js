@@ -103,16 +103,8 @@ export default function History() {
       <LayoutHeader data={data} handleConnectWallet={handleConnectWallet} />
 
       <div className={styles.headerTitle}>Lịch sử người chiến thắng</div>
-      <Table dataSource={lotteryHistory} columns={columns} />;
-      <Footer className={styles.footerPage}>
-
-        <div className={styles.copyRight}>
-          © 2022 Copyright:
-          <a className="text-white" href="#">
-            Chicken.com
-          </a>
-        </div>
-      </Footer>
+      <Table dataSource={lotteryHistory} columns={columns} />
+      
     </div>
   );
 }

@@ -3,8 +3,13 @@ import styles from "../styles/Home.module.css";
 import "antd/dist/antd.css";
 import Web3 from "web3";
 import { Button, PageHeader, Table, Image, message } from "antd";
-import { HistoryOutlined, WalletOutlined, PlayCircleOutlined, UserOutlined } from "@ant-design/icons";
-import { useRouter } from 'next/router'
+import {
+  HistoryOutlined,
+  WalletOutlined,
+  PlayCircleOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+import { useRouter } from "next/router";
 import initializeLotteryContract from "../blockchain/lottery";
 import DataContext from "../context/dataContext";
 import LayoutHeader from "../components/header";
@@ -23,26 +28,26 @@ export default function Home() {
 
   const columns = [
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
     },
     {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
+      title: "Age",
+      dataIndex: "age",
+      key: "age",
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
+      title: "Address",
+      dataIndex: "address",
+      key: "address",
     },
   ];
 
   const handleError = () => {
-    if(error){
+    if (error) {
       message.error(error);
-      set_error('');
+      set_error("");
     }
   };
 
@@ -60,8 +65,8 @@ export default function Home() {
 
         const lc = initializeLotteryContract(web3);
         set_LotteryContract(lc);
-        set_Data({contract: lc, address: accounts[0]});
-        window.ethereum.on('accountsChanged', async() => {
+        set_Data({ contract: lc, address: accounts[0] });
+        window.ethereum.on("accountsChanged", async () => {
           const accounts = await web3.eth.getAccounts();
           setAddress(accounts[0]);
         });
@@ -82,88 +87,81 @@ export default function Home() {
 
   useEffect(() => {
     if (lotteryContract || data.contract) {
-      if(!lotteryContract) {
+      if (!lotteryContract) {
         set_LotteryContract(data.contract);
       }
       updateState();
     }
-    if(error) {
+    if (error) {
       handleError();
     }
-      
   }, [lotteryContract, lotteryPot, players, error]);
 
-  const updateState = ()=> {
-    if(lotteryContract){
+  const updateState = () => {
+    if (lotteryContract) {
       getPot();
       getPlayers();
-      set_dataSource(players.map((player, index) => {
-        return {
-          key: index + 1,
-          name: `https://etherscan.io/address/${player}`,
-          age: 20,
-          address: player
-        }
-      }));
+      set_dataSource(
+        players.map((player, index) => {
+          return {
+            key: index + 1,
+            name: `https://etherscan.io/address/${player}`,
+            age: 20,
+            address: player,
+          };
+        })
+      );
     }
-  }
+  };
 
   const getPot = async () => {
-    if(lotteryContract){
+    if (lotteryContract) {
       const pot = await lotteryContract.methods.getBalance().call();
       set_LotteryPot(pot);
     }
-  }
+  };
 
   const getPlayers = async () => {
-    if(lotteryContract){
+    if (lotteryContract) {
       const players = await lotteryContract.methods.getPlayers().call();
       set_Players(players);
     }
-    
-  }
+  };
 
   const handleEnterLottery = async () => {
     try {
       await lotteryContract.methods.enter().send({
         from: address,
-        value: '2000000000000000',
+        value: "2000000000000000",
         gas: 3000000,
-        gasPrice: null
+        gasPrice: null,
       });
       updateState();
     } catch (err) {
       message.error(err.message);
-      console.log("🚀 ~ file: index.js ~ line 140 ~ startLottery ~ err", err)
+      console.log("🚀 ~ file: index.js ~ line 140 ~ startLottery ~ err", err);
     }
-    
-  }
+  };
 
   return (
     <div className={styles.mainContainer}>
       <LayoutHeader data={data} handleConnectWallet={handleConnectWallet} />
 
-      <h2 style={{ textAlign: 'center' }}>Pot: {lotteryPot}</h2>
+      <h2 style={{ textAlign: "center" }}>Pot: {lotteryPot}</h2>
 
       <div className={styles.contentLottery}>
-        
+        {/* <Button
+          className={styles.buttonPlayNow}
+          type="primary"
+          shape="round"
+          icon={<PlayCircleOutlined />}
+          size={"large"}
+          onClick={handleEnterLottery}
+        >
+          PLAY NOW
+        </Button> */}
 
-        <div className={styles.imageLogo}>
-          <Image
-            src="/images/hinh2.jpg"
-            alt="Vercel Logo"
-            width={'100%'}
-            height={'100%'}
-            preview={false}
-          />
-        </div>
-
-        <Button className={styles.buttonPlayNow} 
-                type="primary" 
-                shape="round" 
-                icon={<PlayCircleOutlined />} 
-                size={'large'} 
-                onClick={handleEnterLottery}>PLAY NOW</Button>
+        <button className={styles.buttonPlayNow} onClick={handleEnterLottery}>PLAY NOW</button>
 
         <div className={styles.contentTable}>
           <div className={styles.tableScroll}>
@@ -171,8 +169,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-
-      
     </div>
   );
 }

@@ -8,6 +8,7 @@ import DataContext from "../context/dataContext";
 import { useState, useContext, useEffect } from "react";
 import Web3 from "web3";
 import initializeLotteryContract from "../blockchain/lottery";
+import LayoutHeader from "../components/header";
 
 export default function History() {
   const router = useRouter();
@@ -99,29 +100,8 @@ export default function History() {
 
   return (
     <div className={styles.mainContainer}>
-      <PageHeader
-        title="LOTTERY GAME"
-        className="site-page-header"
-        subTitle="Lịch sử người chiến thắng"
-        extra={[
-          <Button
-            key="2"
-            type="danger"
-            shape="round"
-            onClick={() => router.push("/")}
-          >
-            <HomeOutlined />
-            Trang chủ
-          </Button>,
-          <Button key="1" type="primary" shape="round" onClick={handleConnectWallet}>
-            <WalletOutlined />
-            Kết nối Wallet
-          </Button>,
-        ]}
-        avatar={{
-          src: "./images/lottery.png",
-        }}
-      ></PageHeader>
+      <LayoutHeader data={data} handleConnectWallet={handleConnectWallet} />
+
       <div className={styles.headerTitle}>Lịch sử người chiến thắng</div>
       <Table dataSource={lotteryHistory} columns={columns} />;
       <Footer className={styles.footerPage}>

@@ -7,6 +7,7 @@ import { HistoryOutlined, WalletOutlined, PlayCircleOutlined, UserOutlined } fro
 import { useRouter } from 'next/router'
 import initializeLotteryContract from "../blockchain/lottery";
 import DataContext from "../context/dataContext";
+import LayoutHeader from "../components/header";
 
 export default function Home() {
   const router = useRouter();
@@ -140,28 +141,7 @@ export default function Home() {
 
   return (
     <div className={styles.mainContainer}>
-      <PageHeader
-        title="LOTTERY GAME"
-        className="site-page-header"
-        subTitle="Team Chicken"
-        extra={[
-          <Button key="3" type="primary" shape="round" onClick={() => router.push('/admin')}>
-            <UserOutlined />
-            Quản lý
-          </Button>,
-          <Button key="2" type="danger" shape="round" onClick={() => router.push('/history')}>
-            <HistoryOutlined />
-            Lịch sử
-          </Button>,
-          <Button key="1" type="primary" shape="round" onClick={handleConnectWallet}>
-            <WalletOutlined />
-            Kết nối Wallet
-          </Button>,
-        ]}
-        avatar={{
-          src: "./images/lottery.png",
-        }}
-      ></PageHeader>
+      <LayoutHeader data={data} handleConnectWallet={handleConnectWallet} />
 
       <h2 style={{ textAlign: 'center' }}>Pot: {lotteryPot}</h2>
 

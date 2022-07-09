@@ -4,6 +4,7 @@ import { Table } from "antd";
 import DataContext from "../context/dataContext";
 import { useState, useContext, useEffect } from "react";
 import LayoutHeader from "../components/header";
+import random from 'random-key-generator' 
 
 export default function History() {
   const [data, set_Data] = useContext(DataContext);
@@ -11,13 +12,14 @@ export default function History() {
   const [error, set_error] = useState();
   const [lotteryHistory, set_LotteryHistory] = useState([]);
   const [lotteryId, set_LotteryId] = useState();
+  const [isFirstCall, set_IsFirstCall] = useState(false);
 
   useEffect(() => {
     if (lotteryContract || data.contract) {
       if(!lotteryContract) {
         set_LotteryContract(data.contract);
       }
-      if(lotteryContract){
+      if(lotteryContract && !isFirstCall){
         getLotteryId();
         getHistory(lotteryId);
       }
@@ -29,9 +31,12 @@ export default function History() {
   },[lotteryContract, lotteryId]);
 
   const getHistory = async (id) => {
-    for (let i = parseInt(id); i > 0 ; i--) {
+    for (let i = parseInt(id) - 1; i > 0 ; i--) {
       const winner = await lotteryContract.methods.lotteryHistory(i).call();
-      set_LotteryHistory(lotteryHistory => [...lotteryHistory, {key: parseInt(id) - i + 1, name: `https://etherscan.io/address/${winner}`, address: winner}])
+      set_LotteryHistory(lotteryHistory => [...lotteryHistory, { key: random(10).toString(), address: winner }]);
+      if (i - 1 == 0) {
+        set_IsFirstCall(true);
+      }
     }
   }
 
@@ -42,30 +47,22 @@ export default function History() {
 
   const columns = [
     {
-      title: "STT",
-      dataIndex: "key",
-      key: "key",
-    },
-    ,
-    {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "Address",
+      title: "Winner",
       dataIndex: "address",
       key: "address",
+      render: text => {
+        const href = `https://etherscan.io/address/${text}`;
+        return <a href={href}>{text}</a>
+      }
     },
   ];
 
   return (
     <div className={styles.mainContainer}>
       <LayoutHeader data={data} handleConnectWallet={{}} />
-
-      <div className={styles.headerTitle}>Lịch sử người chiến thắng</div>
-      <Table dataSource={lotteryHistory} columns={columns} />
-      
+      <div className={styles.contentHistory}>
+        <Table dataSource={lotteryHistory} columns={columns}  />
+      </div>
     </div>
   );
 }

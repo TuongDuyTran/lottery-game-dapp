@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import styles from "../styles/Home.module.css";
 import "antd/dist/antd.css";
 import Web3 from "web3";
-import { Button, PageHeader, Table, Image, message } from "antd";
+import { Table, message } from "antd";
 import {
   HistoryOutlined,
   WalletOutlined,
@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import initializeLotteryContract from "../blockchain/lottery";
 import DataContext from "../context/dataContext";
 import LayoutHeader from "../components/header";
+import Image from 'next/image'
 
 export default function Home() {
   const router = useRouter();
@@ -20,18 +21,22 @@ export default function Home() {
   const [web3, setWeb3] = useState();
   const [address, setAddress] = useState();
   const [lotteryContract, set_LotteryContract] = useState();
-  const [lotteryPot, set_LotteryPot] = useState();
+  const [lotteryPot, set_LotteryPot] = useState(0);
   const [players, set_Players] = useState([]);
   const [dataSource, set_dataSource] = useState([]);
   const [error, set_error] = useState();
   const [successMsg, set_successMsg] = useState();
-
+  
   const columns = [
     {
-      title: "Address",
+      title: "Players joined",
       dataIndex: "address",
       key: "address",
-    },
+      render: text => {
+        const href = `https://etherscan.io/address/${text}`;
+        return <a href={href}>{text}</a>
+      }
+    }
   ];
 
   const handleError = () => {
@@ -59,6 +64,7 @@ export default function Home() {
         window.ethereum.on("accountsChanged", async () => {
           const accounts = await web3.eth.getAccounts();
           setAddress(accounts[0]);
+          set_Data({ contract: lc, address: accounts[0] });
         });
       } catch (err) {
         set_error(err.message);
@@ -105,7 +111,7 @@ export default function Home() {
   const getPot = async () => {
     if (lotteryContract) {
       const pot = await lotteryContract.methods.getBalance().call();
-      set_LotteryPot(pot);
+      set_LotteryPot(pot / 100000000000000000);
     }
   };
 
@@ -135,26 +141,17 @@ export default function Home() {
     <div className={styles.mainContainer}>
       <LayoutHeader data={data} handleConnectWallet={handleConnectWallet} />
 
-      <h2 style={{ textAlign: "center" }}>Pot: {lotteryPot}</h2>
-
       <div className={styles.contentLottery}>
-        {/* <Button
-          className={styles.buttonPlayNow}
-          type="primary"
-          shape="round"
-          icon={<PlayCircleOutlined />}
-          size={"large"}
-          onClick={handleEnterLottery}
-        >
-          PLAY NOW
-        </Button> */}
-
         <button className={styles.buttonPlayNow} onClick={handleEnterLottery}>
           PLAY NOW
         </button>
         <div className={styles.contentTable}>
-          <Table dataSource={dataSource} columns={columns} className={styles.flexOne} />
-          <div className={styles.boxPot}></div>
+          <Table dataSource={dataSource} columns={columns} className={styles.styleTable} pagination={false} />
+          <div className={styles.boxPot}>
+            <div className={styles.showPot}>
+              <div className={styles.displayPot}>{lotteryPot} ETH</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
